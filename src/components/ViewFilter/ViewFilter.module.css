@@ -1,0 +1,39 @@
+.viewFilter {
+  width: 100%;
+  display: flex;
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.active {
+  background: #2196f3;
+  color: #ffffff;
+}
+
+.notActive {
+  background: #ffffff;
+  color: #4a4a4a;
+}
+
+.filterBtn {
+  flex: 1;
+  padding: 15px 57px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #dfe5ec;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.left {
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.right {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

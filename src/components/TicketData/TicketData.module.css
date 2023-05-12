@@ -1,0 +1,23 @@
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.desc {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: #a0b0b9;
+}
+
+.info {
+  font-size: 14px;
+  color: #4a4a4a;
+  font-weight: 600;
+}
+
+.cell {
+  flex-basis: calc(100% / 3 - 20px);
+}
