@@ -20,16 +20,21 @@ function StopFilter({ setStopsFilter }) {
     const checked = e.target.checked
 
     let chkdItems = { ...checkedItems }
-    let chkdKeysArray = Object.keys(chkdItems)
-    let chkdKeysExceptAll = chkdKeysArray.filter((key) => key !== STOPS_FILTERS.ALL)
+    let chkdKeysExceptAll = Object.keys(chkdItems).filter(
+      (key) => key !== STOPS_FILTERS.ALL && checkedItems[key] === true
+    )
     if (item === 'all' && !checked) return
     if (item === 'all' && checked && chkdKeysExceptAll.length) {
-      chkdKeysArray.forEach((el) => {
+      Object.keys(chkdItems).forEach((el) => {
         if (el !== 'all') chkdItems[el] = false
         else chkdItems[el] = true
       })
       setChecked(chkdItems)
     } else {
+      if (!checked && chkdKeysExceptAll.length == 1) {
+        setChecked((prevChecked) => ({ ...prevChecked, all: true, [item]: checked }))
+        return
+      }
       setChecked((prevChecked) => ({ ...prevChecked, all: false, [item]: checked }))
     }
   }
