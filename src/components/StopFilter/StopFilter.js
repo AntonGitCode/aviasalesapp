@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
-import { setStopsFilter } from '../../redux/actions'
+import { setStopsFilter, setFiltersApplied } from '../../redux/actions'
 import { STOPS_FILTERS, checkboxes } from '../../constants'
 import { CheckBox } from '../CheckBox/CheckBox'
 
 import styles from './StopFilter.module.css'
 
-function StopFilter({ setStopsFilter }) {
+function StopFilter({ setStopsFilter, setFiltersApplied }) {
   const [checkedItems, setChecked] = useState({ [STOPS_FILTERS.ALL]: true })
 
   useEffect(() => {
@@ -25,6 +25,7 @@ function StopFilter({ setStopsFilter }) {
     )
     if (item === 'all' && !checked) return
     if (item === 'all' && checked && chkdKeysExceptAll.length) {
+      setFiltersApplied(true)
       Object.keys(chkdItems).forEach((el) => {
         if (el !== 'all') chkdItems[el] = false
         else chkdItems[el] = true
@@ -32,9 +33,12 @@ function StopFilter({ setStopsFilter }) {
       setChecked(chkdItems)
     } else {
       if (!checked && chkdKeysExceptAll.length == 1) {
-        setChecked((prevChecked) => ({ ...prevChecked, all: true, [item]: checked }))
+        setFiltersApplied(false)
+        setChecked((prevChecked) => ({ ...prevChecked, [item]: checked }))
+        // setChecked((prevChecked) => ({ ...prevChecked, all: true, [item]: checked }))
         return
       }
+      setFiltersApplied(true)
       setChecked((prevChecked) => ({ ...prevChecked, all: false, [item]: checked }))
     }
   }
@@ -49,4 +53,4 @@ function StopFilter({ setStopsFilter }) {
   )
 }
 
-export default connect(null, { setStopsFilter })(StopFilter)
+export default connect(null, { setStopsFilter, setFiltersApplied })(StopFilter)

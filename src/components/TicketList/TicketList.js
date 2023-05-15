@@ -20,12 +20,15 @@ function loaderRender(num) {
   return loaderArray
 }
 
-function TicketList({ tickets, dataState, getTickets }) {
+function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
   useEffect(() => {
+    console.log(filtersApplied)
     getTickets()
   }, [])
   return (
     <>
+      {/* {filtersApplied ? (
+        <> */}
       {dataState === DATA_STATES.LOADING && loaderRender(5)}
       <ul className={styles.list}>
         {dataState === DATA_STATES.LOADED &&
@@ -37,6 +40,10 @@ function TicketList({ tickets, dataState, getTickets }) {
             ) : null
           )}
       </ul>
+      {/* </>
+      ) : (
+        <h1>No filters added</h1>
+      )} */}
     </>
   )
 }
@@ -47,6 +54,7 @@ function mapStateToProps(store) {
     dataState: store.dataState,
     viewFilter: store.viewFilter,
     stopsFilter: store.stopsFilter,
+    filersApplied: store.filtersApplied,
   }
 }
 
