@@ -35,7 +35,6 @@ function StopFilter({ setStopsFilter, setFiltersApplied }) {
       if (!checked && chkdKeysExceptAll.length == 1) {
         setFiltersApplied(false)
         setChecked((prevChecked) => ({ ...prevChecked, [item]: checked }))
-        // setChecked((prevChecked) => ({ ...prevChecked, all: true, [item]: checked }))
         return
       }
       setFiltersApplied(true)

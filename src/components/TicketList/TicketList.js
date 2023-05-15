@@ -26,6 +26,9 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
   }, [])
   return (
     <>
+      {!tickets.length && filtersApplied && dataState === DATA_STATES.LOADED && (
+        <h2 className={styles.nofilters}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
+      )}
       {filtersApplied ? (
         <>
           {dataState === DATA_STATES.LOADING && loaderRender(5)}

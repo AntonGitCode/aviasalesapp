@@ -12,6 +12,7 @@ export const getTickets = () => {
     const ticketParams = new URLSearchParams({ searchId: searchId })
     const URL = `${BASE_URL}${_ticketsUrl}${ticketParams}`
     const ticketsSummary = []
+
     const fetchGetTickets = async (url) => {
       try {
         const { tickets, stop } = await fetch(url).then((res) => res.json())
@@ -22,6 +23,7 @@ export const getTickets = () => {
         await fetchGetTickets(url)
       }
     }
+
     await fetchGetTickets(URL)
     dispatch({ type: SET_DATA_STATE, payload: DATA_STATES.LOADED })
     dispatch({ type: ADD_TICKETS, payload: ticketsSummary })
