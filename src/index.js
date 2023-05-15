@@ -6,9 +6,9 @@ import { store } from './redux/store'
 import App from './App'
 import './index.css'
 
-ReactDOM.render(
+const rootElement = document.getElementById('root')
+ReactDOM.createRoot(rootElement).render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )
