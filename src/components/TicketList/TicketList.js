@@ -22,7 +22,6 @@ function loaderRender(num) {
 
 function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
   useEffect(() => {
-    console.log(filtersApplied)
     getTickets()
   }, [])
   return (
