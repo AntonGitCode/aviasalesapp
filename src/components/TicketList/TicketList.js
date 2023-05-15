@@ -27,23 +27,23 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
   }, [])
   return (
     <>
-      {/* {filtersApplied ? (
-        <> */}
-      {dataState === DATA_STATES.LOADING && loaderRender(5)}
-      <ul className={styles.list}>
-        {dataState === DATA_STATES.LOADED &&
-          tickets.map((ticket, i) =>
-            i < 5 ? (
-              <li key={uuidv4()}>
-                <Ticket {...ticket} />
-              </li>
-            ) : null
-          )}
-      </ul>
-      {/* </>
+      {filtersApplied ? (
+        <>
+          {dataState === DATA_STATES.LOADING && loaderRender(5)}
+          <ul className={styles.list}>
+            {dataState === DATA_STATES.LOADED &&
+              tickets.map((ticket, i) =>
+                i < 5 ? (
+                  <li key={uuidv4()}>
+                    <Ticket {...ticket} />
+                  </li>
+                ) : null
+              )}
+          </ul>
+        </>
       ) : (
-        <h1>No filters added</h1>
-      )} */}
+        <h2 className={styles.nofilters}>Фильтры не заданы</h2>
+      )}
     </>
   )
 }
@@ -54,7 +54,7 @@ function mapStateToProps(store) {
     dataState: store.dataState,
     viewFilter: store.viewFilter,
     stopsFilter: store.stopsFilter,
-    filersApplied: store.filtersApplied,
+    filtersApplied: store.filtersApplied,
   }
 }
 
