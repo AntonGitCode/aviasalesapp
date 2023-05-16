@@ -8,7 +8,8 @@ import { CheckBox } from '../CheckBox/CheckBox'
 import styles from './StopFilter.module.css'
 
 function StopFilter({ setStopsFilter, setFiltersApplied }) {
-  const [checkedItems, setChecked] = useState({ [STOPS_FILTERS.ALL]: true })
+  const allCheckedItems = checkboxes.reduce((acc, curr) => ({ ...acc, [curr.name]: true }), {})
+  const [checkedItems, setChecked] = useState(allCheckedItems)
 
   useEffect(() => {
     const keys = Object.keys(checkedItems).filter((key) => checkedItems[key] && key !== STOPS_FILTERS.ALL)
@@ -23,23 +24,32 @@ function StopFilter({ setStopsFilter, setFiltersApplied }) {
     let chkdKeysExceptAll = Object.keys(chkdItems).filter(
       (key) => key !== STOPS_FILTERS.ALL && checkedItems[key] === true
     )
-    if (item === 'all' && !checked) return
-    if (item === 'all' && checked && chkdKeysExceptAll.length) {
+
+    if (item === 'all' && !checked) {
+      const allUncheckedItems = checkboxes.reduce((acc, curr) => ({ ...acc, [curr.name]: false }), {})
+      setChecked(allUncheckedItems)
+      setFiltersApplied(false)
+      return
+    }
+    if (item === 'all' && checked) {
       setFiltersApplied(true)
-      Object.keys(chkdItems).forEach((el) => {
-        if (el !== 'all') chkdItems[el] = false
-        else chkdItems[el] = true
-      })
+      Object.keys(chkdItems).forEach((el) => (chkdItems[el] = true))
       setChecked(chkdItems)
+      return
+    }
+
+    if (!checked && chkdKeysExceptAll.length == 1) {
+      setFiltersApplied(false)
+      setChecked((prevChecked) => ({ ...prevChecked, [item]: checked }))
+      return
+    }
+
+    if (item !== 'all' && checked && chkdKeysExceptAll.length === Object.keys(checkedItems).length - 2) {
+      setChecked((prevChecked) => ({ ...prevChecked, all: true, [item]: checked }))
     } else {
-      if (!checked && chkdKeysExceptAll.length == 1) {
-        setFiltersApplied(false)
-        setChecked((prevChecked) => ({ ...prevChecked, [item]: checked }))
-        return
-      }
-      setFiltersApplied(true)
       setChecked((prevChecked) => ({ ...prevChecked, all: false, [item]: checked }))
     }
+    setFiltersApplied(true)
   }
 
   return (
