@@ -1,10 +1,11 @@
 import React from 'react'
 
-import TicketList from './components/TicketList/TicketList'
-import ViewFilter from './components/ViewFilter/ViewFilter'
-import StopFilter from './components/StopFilter/StopFilter'
+import TicketList from '../TicketList/TicketList'
+import ViewFilter from '../ViewFilter/ViewFilter'
+import StopFilter from '../StopFilter/StopFilter'
+import { ReactComponent as Logo } from '../../img/logo.svg'
+
 import styles from './App.module.css'
-import { ReactComponent as Logo } from './img/logo.svg'
 
 export default function App() {
   return (
