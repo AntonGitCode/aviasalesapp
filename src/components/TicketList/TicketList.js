@@ -28,7 +28,7 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
 
   useEffect(() => {
     setLocalTickets(tickets)
-    console.log('localTickets', localTickets)
+    // console.log('localTickets', localTickets)
   }, [tickets])
 
   return (
@@ -42,7 +42,6 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
           <ul className={styles.list}>
             {dataState === DATA_STATES.LOADED &&
               localTickets.map((ticket, i) =>
-                // tickets.map((ticket, i) =>
                 i < 5 ? (
                   <li key={uuidv4()}>
                     <Ticket {...ticket} />
