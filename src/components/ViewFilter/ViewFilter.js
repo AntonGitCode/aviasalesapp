@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import cx from 'classnames' //
+import cx from 'classnames'
 
 import { VIEW_FILTERS } from '../../constants'
 import { setViewFilter } from '../../redux/actions'

@@ -9,19 +9,19 @@ import { Loader } from '../Loader/Loader'
 
 import styles from './TicketList.module.css'
 
-function loaderRender(num) {
-  let loaderArray = []
-  Array(num)
-    .fill()
-    .forEach(() => {
-      loaderArray = loaderArray.concat(<Loader key={uuidv4()} />)
-    })
-  return loaderArray
-}
-
 function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied, stopsFilter }) {
   const [localTickets, setLocalTickets] = useState([])
   const [filteredTickets, setFilteredTickets] = useState([])
+
+  const loaderRender = (num) => {
+    let loaderArray = []
+    Array(num)
+      .fill()
+      .forEach(() => {
+        loaderArray = loaderArray.concat(<Loader key={uuidv4()} />)
+      })
+    return loaderArray
+  }
 
   const getStopsFromSegments = (segments) => {
     const [departure, arrival] = segments
