@@ -92,6 +92,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
                 ) : null
               )}
           </ul>
+          <button className={styles.morebtn}>Показать еще 5 билетов</button>
         </>
       ) : (
         <h2 className={styles.nofilters}>Фильтры не заданы</h2>
