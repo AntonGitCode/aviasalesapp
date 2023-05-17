@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
@@ -21,9 +21,16 @@ function loaderRender(num) {
 }
 
 function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
+  const [localTickets, setLocalTickets] = useState([])
   useEffect(() => {
     getTickets()
   }, [])
+
+  useEffect(() => {
+    setLocalTickets(tickets)
+    console.log('localTickets', localTickets)
+  }, [tickets])
+
   return (
     <>
       {!tickets.length && filtersApplied && dataState === DATA_STATES.LOADED && (
@@ -34,7 +41,8 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
           {dataState === DATA_STATES.LOADING && loaderRender(5)}
           <ul className={styles.list}>
             {dataState === DATA_STATES.LOADED &&
-              tickets.map((ticket, i) =>
+              localTickets.map((ticket, i) =>
+                // tickets.map((ticket, i) =>
                 i < 5 ? (
                   <li key={uuidv4()}>
                     <Ticket {...ticket} />
