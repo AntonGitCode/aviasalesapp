@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
 import { getTickets } from '../../redux/actions'
-import { getTicketByStopsAndViewFilter } from '../../redux/getTicketsFiltered'
-import { DATA_STATES } from '../../constants'
+import { DATA_STATES, VIEW_FILTERS, STOPS_FILTERS } from '../../constants'
 import { Ticket } from '../Ticket/Ticket'
 import { Loader } from '../Loader/Loader'
 
@@ -20,16 +19,60 @@ function loaderRender(num) {
   return loaderArray
 }
 
-function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
+function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied, stopsFilter }) {
   const [localTickets, setLocalTickets] = useState([])
+  const [filteredTickets, setFilteredTickets] = useState([])
+
+  const getStopsFromSegments = (segments) => {
+    const [departure, arrival] = segments
+    return [departure.stops.length, arrival.stops.length]
+  }
+
+  const sortTicketsByCheapest = (ticketsToSort) => {
+    return ticketsToSort.slice().sort((t1, t2) => t1.price - t2.price)
+  }
+  const sortTicketsByFastest = (ticketsToSort) => {
+    return ticketsToSort.slice().sort((t1, t2) => {
+      const t1Duration = t1.segments.reduce((acc, { duration }) => acc + duration, 0)
+      const t2Duration = t2.segments.reduce((acc, { duration }) => acc + duration, 0)
+      return t1Duration - t2Duration
+    })
+  }
+
+  const filterTicketsByStops = () => {
+    let ticketsToFilter = [...localTickets]
+    return ticketsToFilter.filter(({ segments }) => {
+      const [fromLength, toLength] = getStopsFromSegments(segments)
+      if (stopsFilter.length === 0) return ticketsToFilter
+      const relevant = stopsFilter.map((item) => (item !== STOPS_FILTERS.ALL ? Number(item) : item))
+      return relevant.includes(fromLength) && relevant.includes(toLength)
+    })
+  }
+
+  const getTicketByStopsAndViewFilter = () => {
+    const newTickets = filterTicketsByStops()
+    switch (viewFilter) {
+      case VIEW_FILTERS.CHEAPEST:
+        return sortTicketsByCheapest(newTickets)
+      case VIEW_FILTERS.FASTEST:
+        return sortTicketsByFastest(newTickets)
+      default:
+        return newTickets
+    }
+  }
+
   useEffect(() => {
     getTickets()
   }, [])
 
   useEffect(() => {
     setLocalTickets(tickets)
-    // console.log('localTickets', localTickets)
+    setFilteredTickets(getTicketByStopsAndViewFilter())
   }, [tickets])
+
+  useEffect(() => {
+    setFilteredTickets(getTicketByStopsAndViewFilter())
+  }, [stopsFilter, viewFilter])
 
   return (
     <>
@@ -41,7 +84,7 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
           {dataState === DATA_STATES.LOADING && loaderRender(5)}
           <ul className={styles.list}>
             {dataState === DATA_STATES.LOADED &&
-              localTickets.map((ticket, i) =>
+              filteredTickets.map((ticket, i) =>
                 i < 5 ? (
                   <li key={uuidv4()}>
                     <Ticket {...ticket} />
@@ -59,7 +102,7 @@ function TicketList({ tickets, dataState, getTickets, filtersApplied }) {
 
 function mapStateToProps(store) {
   return {
-    tickets: getTicketByStopsAndViewFilter(store),
+    tickets: store.tickets,
     dataState: store.dataState,
     viewFilter: store.viewFilter,
     stopsFilter: store.stopsFilter,
