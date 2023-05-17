@@ -2,8 +2,6 @@ import { DATA_STATES, BASE_URL } from '../constants'
 
 import { ADD_TICKETS, SET_VIEW_FILTER, SET_STOPS_FILTER, SET_DATA_STATE, SET_FILTERS_APPLIED } from './actionTypes'
 
-// const ApiCallDelay = (ms) => new Promise((res) => setTimeout(res, ms))
-
 export const getTickets = () => {
   const _searchUrl = 'search'
   const _ticketsUrl = 'tickets?'
@@ -22,15 +20,12 @@ export const getTickets = () => {
         dispatch({ type: ADD_TICKETS, payload: ticketsSummary })
         dispatch({ type: SET_DATA_STATE, payload: DATA_STATES.LOADED })
         if (!stop) {
-          // await ApiCallDelay(API_DELAY_MS)
           await fetchGetTickets(url)
         } else return true
       } catch (err) {
-        // await ApiCallDelay(API_DELAY_MS)
         await fetchGetTickets(url)
       }
     }
-
     await fetchGetTickets(URL)
     // dispatch({ type: SET_DATA_STATE, payload: DATA_STATES.LOADED })
   }

@@ -12,6 +12,7 @@ import styles from './TicketList.module.css'
 function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied, stopsFilter }) {
   const [localTickets, setLocalTickets] = useState([])
   const [filteredTickets, setFilteredTickets] = useState([])
+  const [numShowTickets, setNumShowTickets] = useState(5)
 
   const loaderRender = (num) => {
     let loaderArray = []
@@ -71,8 +72,16 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
   }, [tickets])
 
   useEffect(() => {
-    setFilteredTickets(getTicketByStopsAndViewFilter())
+    setNumShowTickets(5)
   }, [stopsFilter, viewFilter])
+
+  useEffect(() => {
+    setFilteredTickets(getTicketByStopsAndViewFilter())
+  }, [stopsFilter, viewFilter, numShowTickets])
+
+  const incShowTickets = () => {
+    setNumShowTickets((prevNumShowTickets) => prevNumShowTickets + 5)
+  }
 
   return (
     <>
@@ -81,18 +90,20 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       )}
       {filtersApplied ? (
         <>
-          {dataState === DATA_STATES.LOADING && loaderRender(5)}
+          {dataState === DATA_STATES.LOADING && loaderRender(numShowTickets)}
           <ul className={styles.list}>
             {dataState === DATA_STATES.LOADED &&
               filteredTickets.map((ticket, i) =>
-                i < 5 ? (
+                i < numShowTickets ? (
                   <li key={uuidv4()}>
                     <Ticket {...ticket} />
                   </li>
                 ) : null
               )}
           </ul>
-          <button className={styles.morebtn}>Показать еще 5 билетов</button>
+          <button className={styles.morebtn} onClick={() => incShowTickets()}>
+            Показать еще 5 билетов
+          </button>
         </>
       ) : (
         <h2 className={styles.nofilters}>Фильтры не заданы</h2>
