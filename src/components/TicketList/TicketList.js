@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
-import { getTickets } from '../../redux/actions'
+import { getTickets } from '../../redux/fetchApi'
 import { DATA_STATES, VIEW_FILTERS, STOPS_FILTERS } from '../../constants'
 import { Ticket } from '../Ticket/Ticket'
 import { Loader } from '../Loader/Loader'
