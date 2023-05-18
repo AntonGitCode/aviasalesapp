@@ -95,15 +95,17 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
             {dataState === DATA_STATES.LOADED &&
               filteredTickets.map((ticket, i) =>
                 i < numShowTickets ? (
-                  <li key={uuidv4()}>
+                  <li key={ticket.segments[0].date}>
                     <Ticket {...ticket} />
                   </li>
                 ) : null
               )}
           </ul>
-          <button className={styles.morebtn} onClick={() => incShowTickets()}>
-            Показать еще 5 билетов
-          </button>
+          {dataState === DATA_STATES.LOADED && (
+            <button className={styles.morebtn} onClick={() => incShowTickets()}>
+              Показать еще 5 билетов
+            </button>
+          )}
         </>
       ) : (
         <h2 className={styles.nofilters}>Фильтры не заданы</h2>

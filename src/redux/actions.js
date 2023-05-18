@@ -27,7 +27,6 @@ export const getTickets = () => {
       }
     }
     await fetchGetTickets(URL)
-    // dispatch({ type: SET_DATA_STATE, payload: DATA_STATES.LOADED })
   }
 }
 
