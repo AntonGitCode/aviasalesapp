@@ -96,7 +96,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
             {dataState === DATA_STATES.LOADED &&
               filteredTickets.map((ticket, i) =>
                 i < numShowTickets ? (
-                  <li key={ticket.segments[0].date}>
+                  <li key={i}>
                     <Ticket {...ticket} />
                   </li>
                 ) : null
