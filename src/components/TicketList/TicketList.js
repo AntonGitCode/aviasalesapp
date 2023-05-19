@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
@@ -28,25 +28,18 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
     return [departure.stops.length, arrival.stops.length]
   }
 
-  const sortTicketsByCheapest = useMemo(
-    () => (ticketsToSort) => {
-      return ticketsToSort.slice().sort((t1, t2) => t1.price - t2.price)
-    },
-    [viewFilter]
-  )
+  const sortTicketsByCheapest = (ticketsToSort) => {
+    return ticketsToSort.slice().sort((t1, t2) => t1.price - t2.price)
+  }
+  const sortTicketsByFastest = (ticketsToSort) => {
+    return ticketsToSort.slice().sort((t1, t2) => {
+      const t1Duration = t1.segments.reduce((acc, { duration }) => acc + duration, 0)
+      const t2Duration = t2.segments.reduce((acc, { duration }) => acc + duration, 0)
+      return t1Duration - t2Duration
+    })
+  }
 
-  const sortTicketsByFastest = useMemo(
-    () => (ticketsToSort) => {
-      return ticketsToSort.slice().sort((t1, t2) => {
-        const t1Duration = t1.segments.reduce((acc, { duration }) => acc + duration, 0)
-        const t2Duration = t2.segments.reduce((acc, { duration }) => acc + duration, 0)
-        return t1Duration - t2Duration
-      })
-    },
-    [viewFilter]
-  )
-
-  const filterTicketsByStops = useMemo(() => {
+  const filterTicketsByStops = () => {
     let ticketsToFilter = [...tickets]
     return ticketsToFilter.filter(({ segments }) => {
       const [fromLength, toLength] = getStopsFromSegments(segments)
@@ -54,10 +47,10 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       const relevant = stopsFilter.map((item) => (item !== STOPS_FILTERS.ALL ? Number(item) : item))
       return relevant.includes(fromLength) && relevant.includes(toLength)
     })
-  }, [tickets, stopsFilter])
+  }
 
-  const filteredTicketList = useMemo(() => {
-    const newTickets = filterTicketsByStops
+  const getTicketByStopsAndViewFilter = () => {
+    const newTickets = filterTicketsByStops()
     switch (viewFilter) {
       case VIEW_FILTERS.CHEAPEST:
         return sortTicketsByCheapest(newTickets)
@@ -66,7 +59,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       default:
         return newTickets
     }
-  }, [filterTicketsByStops, viewFilter])
+  }
 
   useEffect(() => {
     getTickets()
@@ -77,8 +70,8 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
   }, [stopsFilter, viewFilter])
 
   useEffect(() => {
-    setFilteredTickets(filteredTicketList)
-  }, [filteredTicketList, numShowTickets])
+    setFilteredTickets(getTicketByStopsAndViewFilter())
+  }, [tickets, stopsFilter, viewFilter, numShowTickets])
 
   const incShowTickets = () => {
     setNumShowTickets((prevNumShowTickets) => prevNumShowTickets + 5)
@@ -86,7 +79,6 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
 
   return (
     <>
-      {tickets.length}
       {dataState === DATA_STATES.FAIL && <h2 className={styles.nofilters}>Sorry the server didnt take off</h2>}
       {!tickets.length && filtersApplied && dataState === DATA_STATES.LOADED && (
         <h2 className={styles.nofilters}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
