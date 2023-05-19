@@ -6,7 +6,7 @@ import { getTickets } from '../../redux/fetchApi'
 import { DATA_STATES } from '../../constants'
 import { Ticket } from '../Ticket/Ticket'
 import { Loader } from '../Loader/Loader'
-import { getTicketByStopsAndViewFilter } from '../../utils/sortTickets'
+import { getTicketByStopsAndViewFilter } from '../../utils/filterTickets'
 
 import styles from './TicketList.module.css'
 
@@ -36,10 +36,6 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
   useEffect(() => {
     setNumShowTickets(5)
   }, [stopsFilter, viewFilter])
-
-  // useEffect(() => {
-  //   setFilteredTickets(getTicketByStopsAndViewFilter(tickets, stopsFilter, viewFilter))
-  // }, [tickets, stopsFilter, viewFilter, numShowTickets])
 
   useEffect(() => {
     setFilteredTickets(memoizedFilteredTickets)
