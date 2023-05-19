@@ -10,7 +10,6 @@ import { Loader } from '../Loader/Loader'
 import styles from './TicketList.module.css'
 
 function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied, stopsFilter }) {
-  const [localTickets, setLocalTickets] = useState([])
   const [filteredTickets, setFilteredTickets] = useState([])
   const [numShowTickets, setNumShowTickets] = useState(5)
 
@@ -41,7 +40,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
   }
 
   const filterTicketsByStops = () => {
-    let ticketsToFilter = [...localTickets]
+    let ticketsToFilter = [...tickets]
     return ticketsToFilter.filter(({ segments }) => {
       const [fromLength, toLength] = getStopsFromSegments(segments)
       if (stopsFilter.length === 0) return ticketsToFilter
@@ -67,7 +66,6 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
   }, [])
 
   useEffect(() => {
-    setLocalTickets(tickets)
     setFilteredTickets(getTicketByStopsAndViewFilter())
   }, [tickets])
 
