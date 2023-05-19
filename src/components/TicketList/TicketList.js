@@ -86,6 +86,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
 
   return (
     <>
+      {tickets.length}
       {dataState === DATA_STATES.FAIL && <h2 className={styles.nofilters}>Sorry the server didnt take off</h2>}
       {!tickets.length && filtersApplied && dataState === DATA_STATES.LOADED && (
         <h2 className={styles.nofilters}>Рейсов, подходящих под заданные фильтры, не найдено</h2>
@@ -98,7 +99,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
               <ul className={styles.list}>
                 {filteredTickets.map((ticket, i) =>
                   i < numShowTickets ? (
-                    <li key={i}>
+                    <li key={ticket.segments[0].date}>
                       <Ticket {...ticket} />
                     </li>
                   ) : null
