@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
 import { getTickets } from '../../redux/fetchApi'
-// import { DATA_STATES, VIEW_FILTERS, STOPS_FILTERS } from '../../constants'
 import { DATA_STATES } from '../../constants'
 import { Ticket } from '../Ticket/Ticket'
 import { Loader } from '../Loader/Loader'
@@ -14,6 +13,11 @@ import styles from './TicketList.module.css'
 function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied, stopsFilter }) {
   const [filteredTickets, setFilteredTickets] = useState([])
   const [numShowTickets, setNumShowTickets] = useState(5)
+
+  const memoizedFilteredTickets = useMemo(
+    () => getTicketByStopsAndViewFilter(tickets, stopsFilter, viewFilter),
+    [tickets, stopsFilter, viewFilter]
+  )
 
   const loaderRender = (num) => {
     let loaderArray = []
@@ -33,9 +37,13 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
     setNumShowTickets(5)
   }, [stopsFilter, viewFilter])
 
+  // useEffect(() => {
+  //   setFilteredTickets(getTicketByStopsAndViewFilter(tickets, stopsFilter, viewFilter))
+  // }, [tickets, stopsFilter, viewFilter, numShowTickets])
+
   useEffect(() => {
-    setFilteredTickets(getTicketByStopsAndViewFilter(tickets, stopsFilter, viewFilter))
-  }, [tickets, stopsFilter, viewFilter, numShowTickets])
+    setFilteredTickets(memoizedFilteredTickets)
+  }, [memoizedFilteredTickets])
 
   const incShowTickets = () => {
     setNumShowTickets((prevNumShowTickets) => prevNumShowTickets + 5)
