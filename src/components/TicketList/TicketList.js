@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { connect } from 'react-redux'
 
@@ -39,7 +39,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
     })
   }
 
-  const filterTicketsByStops = () => {
+  const filterTicketsByStops = useMemo(() => {
     let ticketsToFilter = [...tickets]
     return ticketsToFilter.filter(({ segments }) => {
       const [fromLength, toLength] = getStopsFromSegments(segments)
@@ -47,10 +47,10 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       const relevant = stopsFilter.map((item) => (item !== STOPS_FILTERS.ALL ? Number(item) : item))
       return relevant.includes(fromLength) && relevant.includes(toLength)
     })
-  }
+  }, [tickets, stopsFilter])
 
-  const getTicketByStopsAndViewFilter = () => {
-    const newTickets = filterTicketsByStops()
+  const filteredTicketList = useMemo(() => {
+    const newTickets = filterTicketsByStops
     switch (viewFilter) {
       case VIEW_FILTERS.CHEAPEST:
         return sortTicketsByCheapest(newTickets)
@@ -59,23 +59,23 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       default:
         return newTickets
     }
-  }
+  }, [viewFilter, filterTicketsByStops])
 
   useEffect(() => {
     getTickets()
   }, [])
 
   useEffect(() => {
-    setFilteredTickets(getTicketByStopsAndViewFilter())
-  }, [tickets])
+    setFilteredTickets(filteredTicketList)
+  }, [filteredTicketList])
 
   useEffect(() => {
     setNumShowTickets(5)
   }, [stopsFilter, viewFilter])
 
   useEffect(() => {
-    setFilteredTickets(getTicketByStopsAndViewFilter())
-  }, [stopsFilter, viewFilter, numShowTickets])
+    setFilteredTickets(filteredTicketList)
+  }, [filteredTicketList, numShowTickets])
 
   const incShowTickets = () => {
     setNumShowTickets((prevNumShowTickets) => prevNumShowTickets + 5)
