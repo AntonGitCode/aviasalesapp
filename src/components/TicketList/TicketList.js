@@ -32,7 +32,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
     () => (ticketsToSort) => {
       return ticketsToSort.slice().sort((t1, t2) => t1.price - t2.price)
     },
-    []
+    [viewFilter]
   )
 
   const sortTicketsByFastest = useMemo(
@@ -43,7 +43,7 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
         return t1Duration - t2Duration
       })
     },
-    []
+    [viewFilter]
   )
 
   const filterTicketsByStops = useMemo(() => {
@@ -66,15 +66,11 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       default:
         return newTickets
     }
-  }, [viewFilter, filterTicketsByStops])
+  }, [filterTicketsByStops, viewFilter])
 
   useEffect(() => {
     getTickets()
   }, [])
-
-  useEffect(() => {
-    setFilteredTickets(filteredTicketList)
-  }, [filteredTicketList])
 
   useEffect(() => {
     setNumShowTickets(5)
