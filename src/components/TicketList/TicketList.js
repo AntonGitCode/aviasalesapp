@@ -92,20 +92,23 @@ function TicketList({ tickets, dataState, viewFilter, getTickets, filtersApplied
       {filtersApplied ? (
         <>
           {dataState === DATA_STATES.LOADING && loaderRender(numShowTickets)}
-          <ul className={styles.list}>
-            {dataState === DATA_STATES.LOADED &&
-              filteredTickets.map((ticket, i) =>
-                i < numShowTickets ? (
-                  <li key={i}>
-                    <Ticket {...ticket} />
-                  </li>
-                ) : null
-              )}
-          </ul>
           {dataState === DATA_STATES.LOADED && (
-            <button className={styles.morebtn} onClick={() => incShowTickets()}>
-              Показать еще 5 билетов
-            </button>
+            <>
+              <ul className={styles.list}>
+                {filteredTickets.map((ticket, i) =>
+                  i < numShowTickets ? (
+                    <li key={i}>
+                      <Ticket {...ticket} />
+                    </li>
+                  ) : null
+                )}
+              </ul>
+              {numShowTickets < filteredTickets.length && (
+                <button className={styles.morebtn} onClick={() => incShowTickets()}>
+                  Показать еще 5 билетов
+                </button>
+              )}
+            </>
           )}
         </>
       ) : (

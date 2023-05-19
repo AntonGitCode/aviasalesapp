@@ -16,7 +16,13 @@ export const getTickets = () => {
 
       const fetchGetTickets = async (url) => {
         try {
-          const { tickets, stop } = await fetch(url).then((res) => res.json())
+          const response = await fetch(url)
+          if (!response.ok) {
+            if (response.status !== 500) {
+              throw new Error('Error while fetching tickets')
+            }
+          }
+          const { tickets, stop } = await response.json()
           ticketsSummary.push(...tickets)
           dispatch({ type: ADD_TICKETS, payload: ticketsSummary })
           dispatch({ type: SET_DATA_STATE, payload: DATA_STATES.LOADED })
